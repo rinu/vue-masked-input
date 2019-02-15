@@ -264,7 +264,7 @@ export default {
       var _this3 = this;
 
       e.preventDefault();
-      var text = e.clipboardData.getData('text');
+      var text = (e.clipboardData || window.clipboardData).getData('text');
       [].concat(_toConsumableArray(text)).reduce(function (memo, item) {
         return _this3.maskCore.input(item);
       }, null);
