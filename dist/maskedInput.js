@@ -29,8 +29,7 @@ export default {
   data: function data() {
     return {
       marginLeft: 0,
-      maskCore: null,
-      updateAfterAll: false
+      maskCore: null
     };
   },
 
@@ -244,8 +243,8 @@ export default {
             return _this2.maskCore.input(item);
           }, null);
         }
-      } else if (this.maskCore.input(e.data)) {
-        this.updateAfterAll = true;
+      } else {
+        this.maskCore.input(e.data);
       }
       this.updateToCoreState();
     },

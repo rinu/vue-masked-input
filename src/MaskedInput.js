@@ -26,7 +26,6 @@ export default {
   data: () => ({
     marginLeft: 0,
     maskCore: null,
-    updateAfterAll: false,
   }),
 
   props: {
@@ -213,8 +212,8 @@ export default {
           [...text.substr(this.maskCore.selection.start)]
             .reduce((memo, item) => this.maskCore.input(item), null);
         }
-      } else if (this.maskCore.input(e.data)) {
-        this.updateAfterAll = true;
+      } else {
+        this.maskCore.input(e.data);
       }
       this.updateToCoreState();
     },
