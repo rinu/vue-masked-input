@@ -26,6 +26,7 @@ export default {
   data: () => ({
     marginLeft: 0,
     maskCore: null,
+    keyCode: null,
   }),
 
   props: {
@@ -118,6 +119,7 @@ export default {
         return;
       }
       this.setNativeSelection();
+      this.keyCode = e.keyCode;
       switch (e.keyCode) {
         // backspace
         case 8:
@@ -182,23 +184,6 @@ export default {
           this.updateToCoreState();
           break;
 
-        // delete
-        case 46:
-          e.preventDefault();
-          if (this.$refs.input.selectionStart === this.$refs.input.selectionEnd) {
-            this.maskCore.setValue('');
-            this.maskCore.setSelection({
-              start: 0,
-              end: 0,
-            });
-            this.$refs.input.selectionStart = this.maskCore.selection.start;
-            this.$refs.input.selectionEnd = this.maskCore.selection.start;
-          } else {
-            this.maskCore.backspace();
-          }
-          this.updateToCoreState();
-          break;
-
         default:
           break;
       }
@@ -206,14 +191,26 @@ export default {
 
     input(e) {
       if (e.preventDefault) e.preventDefault();
-      if (typeof e.data === 'undefined') {
-        const text = e.target.value;
-        if (text) {
-          [...text.substr(this.maskCore.selection.start)]
-            .reduce((memo, item) => this.maskCore.input(item), null);
+      const text = e.target.value;
+      const selection = {
+        start: this.$refs.input.selectionStart,
+        end: this.$refs.input.selectionEnd,
+      };
+      if (this.keyCode === 46 && selection.start !== selection.end) {
+        this.maskCore.backspace();
+      } else if (text) {
+        this.maskCore.setValue('');
+        this.maskCore.setSelection({
+          start: 0,
+          end: 0,
+        });
+        [...text]
+          .reduce((memo, item) => this.maskCore.input(item), null);
+        if (this.keyCode === 46) {
+          this.maskCore.setSelection(selection);
+          this.$refs.input.selectionStart = this.maskCore.selection.start;
+          this.$refs.input.selectionEnd = this.maskCore.selection.start;
         }
-      } else {
-        this.maskCore.input(e.data);
       }
       this.updateToCoreState();
     },
