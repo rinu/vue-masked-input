@@ -421,7 +421,21 @@
       searchInputQuerySelector: {
         type: String,
         default: '[type=search]'
-      }
+      },
+
+      /**
+       * Check if the given option is currently selected.
+       * @param  {Object|String}  option
+       * @return {Boolean}        True when selected | False otherwise
+       */
+      isOptionSelected: {
+        type: Function,
+        default(option) {
+          return this.selectedValue.some(value => {
+            return this.optionComparator(value, option)
+          })
+        }
+      },
     },
 
     data() {
@@ -582,17 +596,6 @@
             }
           }
         }
-      },
-
-      /**
-       * Check if the given option is currently selected.
-       * @param  {Object|String}  option
-       * @return {Boolean}        True when selected | False otherwise
-       */
-      isOptionSelected(option) {
-        return this.selectedValue.some(value => {
-          return this.optionComparator(value, option)
-        })
       },
 
       /**
